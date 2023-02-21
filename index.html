@@ -18,12 +18,15 @@
   </noscript> 
 </head> 
 <body>
-  <model-viewer class="model-viewer" bounds="tight" src="get/demo.glb" ios-src="get/demo.usdz" shadow-intensity="1" ar enable-pan ar-scale="auto" camera-controls exposure="1" ar-modes="scene-viewer quick-look webxr" quick-look-browsers="safari chrome" auto-rotate scale="1.2 1.2 1.2" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto auto" autoplay > 
+  <model-viewer id="pickMaterial" class="model-viewer" bounds="tight" src="get/demo.glb" ios-src="get/demo.usdz" shadow-intensity="1" 
+    ar enable-pan ar-scale="auto" camera-controls exposure="1" ar-modes="scene-viewer quick-look webxr" 
+    quick-look-browsers="safari chrome" auto-rotate scale="1.2 1.2 1.2" min-camera-orbit="auto auto auto" 
+    max-camera-orbit="auto auto auto" autoplay >
     <div class="progress-bar hide" slot="progress-bar"> 
       <div class="update-bar"></div> 
     </div> 
     <button onclick="myFunction()" slot="ar-button" id="ar-button" class="ar-button"> Включить AR </button>
-    <div id="ar-prompt"> <img src="get/hand.png" /></div> 
+    <div id="ar-prompt"> <img src="get/hand.png" /></div>
   </model-viewer>
   <div class="frame">
     <button class="button__view-ar" id="ar">
@@ -32,6 +35,49 @@
         </span>
         <p class="button__view-ar--text">VIEW IN AR</p>
     </button>
+    <div class="frame__select-colors">
+      <div class="main">
+        <select id="colors-main" class="box-select">
+          <option value="" selected disabled hidden>Основной цвет:</option>
+          <option value="red">Красный</option>
+          <option value="blue">Синий</option>
+          <option value="white">Белый</option>
+        </select>
+      </div>
+      <div class="second">
+        <select id="colors-second" class="box-select">
+          <option value="" selected disabled hidden>Вспомогательный цвет:</option>
+          <option value="red">Красный</option>
+          <option value="blue">Синий</option>
+          <option value="white">Белый</option>
+        </select>
+      </div>
+    </div>
+    <div class="third">
+      <select id="colors-third" class="box-select">
+        <option value="" selected disabled hidden>Цвет бренда:</option>
+        <option value="red">Красный</option>
+        <option value="blue">Синий</option>
+        <option value="white">Белый</option>
+      </select>
+    </div>
+    <div class="fourth">
+      <select id="colors-fourth" class="box-select">
+        <option value="" selected disabled hidden>Цвет логотипа:</option>
+        <option value="red">Красный</option>
+        <option value="blue">Синий</option>
+        <option value="white">Белый</option>
+      </select>
+    </div>
+    <div class="fifth">
+      <select id="colors-fifth" class="box-select">
+        <option value="" selected disabled hidden>Цвет знака логотипа:</option>
+        <option value="red">Красный</option>
+        <option value="blue">Синий</option>
+        <option value="white">Белый</option>
+      </select>
+    </div>
+  </div>
   </div>
   <div id="modal" class="modal">
     <div class="modal__content">
@@ -40,6 +86,7 @@
       <div class="modal__content--qr" id="qrcode"></div>
     </div>
   </div>
+  
 
   <script src="get/focus-visible.js" defer></script> 
   <!-- 🚨 REQUIRED: Web Components polyfill to support Edge and Firefox < 63 -->
@@ -84,5 +131,6 @@
       modelViewer.activateAR();
     });
   </script>
+  <script src="changeModel.js"></script>
 </body>
 </html>
