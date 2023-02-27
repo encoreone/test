@@ -9,8 +9,8 @@ modelViewerTexture.addEventListener("load", () => {
 
   const createAndApplyTextureOne = async (channel, event) => {
     const texture = await modelViewerTexture.createTexture(event.target.value);
-
-    materialMain.pbrMetallicRoughness[channel].setTexture(texture);
+    materialMain.pbrMetallicRoughness[channel].setMetallicFactor(texture);
+    // materialMain.pbrMetallicRoughness[channel].baseColorFactor(texture);
   }
 
   const createAndApplyTextureTwo = async (channel, event) => {
