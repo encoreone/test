@@ -8,13 +8,34 @@ modelViewerTexture.addEventListener("load", () => {
   const materialFifth = modelViewerTexture.model.materials[4];
 
   const createAndApplyTextureOne = async (channel, event) => {
-    await materialMain.pbrMetallicRoughness.setBaseColorFactor(event.target.value); 
+    const texture = await modelViewerTexture.createTexture(event.target.value);
+
+    materialMain.pbrMetallicRoughness[channel].setTexture(texture);
   }
 
-  const createAndApplyTextureTwo = (channel, event) => materialSecond.pbrMetallicRoughness.setBaseColorFactor(event.target.value);
-  const createAndApplyTextureThree = (channel, event) => materialThird.pbrMetallicRoughness.setBaseColorFactor(event.target.value);
-  const createAndApplyTextureFour = (channel, event) => materialFourth.pbrMetallicRoughness.setBaseColorFactor(event.target.value);
-  const createAndApplyTextureFive = (channel, event) => materialFifth.pbrMetallicRoughness.setBaseColorFactor(event.target.value);
+  const createAndApplyTextureTwo = async (channel, event) => {
+    const texture = await modelViewerTexture.createTexture(event.target.value);
+
+    materialSecond.pbrMetallicRoughness[channel].setTexture(texture);
+  }
+
+  const createAndApplyTextureThree = async (channel, event) => {
+    const texture = await modelViewerTexture.createTexture(event.target.value);
+
+    materialThird.pbrMetallicRoughness[channel].setTexture(texture);
+  }
+
+  const createAndApplyTextureFour = async (channel, event) => {
+    const texture = await modelViewerTexture.createTexture(event.target.value);
+
+    materialFourth.pbrMetallicRoughness[channel].setTexture(texture);
+  }
+  
+  const createAndApplyTextureFive = async (channel, event) => {
+    const texture = await modelViewerTexture.createTexture(event.target.value);
+
+    materialFifth.pbrMetallicRoughness[channel].setTexture(texture);
+  }
 
   document.querySelector('#colors-main').addEventListener('input', event => createAndApplyTextureOne('baseColorTexture', event));
   document.querySelector('#colors-second').addEventListener('input', event => createAndApplyTextureTwo('baseColorTexture', event))

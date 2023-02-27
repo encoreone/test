@@ -3,7 +3,7 @@ change texture
 
 snipp:
 
-
+  *texture
   const createAndApplyTextureOne = async (channel, event) => {
     const texture = await modelViewerTexture.createTexture(event.target.value);
 
@@ -15,5 +15,6 @@ snipp:
     // materialMain[channel].setTexture(texture)
   }
 
-
+  *color
+  const createAndApplyTextureThree = (channel, event) => materialThird.pbrMetallicRoughness.setBaseColorFactor(event.target.value);
 */
