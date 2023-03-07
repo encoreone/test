@@ -109,43 +109,57 @@
   <script src="components/qrcode.js"></script> 
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const optionValue = urlParams.get('optionValue');
-      if (optionValue) {
-        const optionToSelect = document.querySelector(`option[value="${optionValue}"]`);
-        if (optionToSelect) {
-          optionToSelect.selected = true;
-        }
-      }
 
-      const select = document.getElementById('rating');
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const optionValue = urlParams.get('optionValue');
+  if (optionValue) {
+    const select = document.getElementById('rating');
+    const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
+    if (optionToSelect) {
+      optionToSelect.selected = true;
 
-      select.addEventListener('change', () => {
-        const optionValue = select.value;
+      // const [material] = document.querySelector("model-viewer#color").model.materials;
+      // material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+    }
+  }
 
-        // Изменяем выбранный элемент `option` без перезагрузки страницы
-        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
-        optionToSelect.selected = true;
+  const modelViewerColor = document.querySelector("model-viewer#color");
+  const select = document.getElementById('rating');
 
-        // Обновляем URL-адрес страницы
-        const params = new URLSearchParams();
-        params.append('optionValue', optionValue);
-        const url = new URL(window.location.href);
-        url.search = params.toString();
-        window.history.replaceState({}, '', url);
+  select.addEventListener('change', () => {
+    const optionValue = select.value;
 
-        const qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: `${window.location.href}`,
-            width: 270,
-            height: 270,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-      });
+    const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+    optionToSelect.selected = true;
+
+    const [material] = modelViewerColor.model.materials;
+      material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+
+    // const [material] = modelViewerColor.model.materials;
+    // material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+    // modelViewerColor.updateSettings();
+
+    const params = new URLSearchParams();
+    params.append('optionValue', optionValue);
+    const url = new URL(window.location.href);
+    url.search = params.toString();
+    window.history.pushState({}, '', url);
+    
+    const qrcode = new QRCode(document.getElementById("qrcode"), {
+      text: `${window.location.href}`,
+      width: 270,
+      height: 270,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
     });
-  </script>
+  });
+});
+    
+
+
+</script>
 
 
   
@@ -196,61 +210,55 @@
 
   <script>
 
-async function exportGLB(){
-    const modelViewer = document.getElementById("color");
-    const glTF = await modelViewer.exportScene();
-    const file = new File([glTF], "export.glb");
-    console.log(file)
+// async function exportGLB(){
+//     const modelViewer = document.getElementById("color");
+//     const glTF = await modelViewer.exportScene();
+//     const file = new File([glTF], "export.glb");
+//     console.log(file)
 
     
-  }
+//   }
 
 
-    const modelViewerColor = document.querySelector("model-viewer#color");
-    // const select = document.querySelector('#rating');
+//     // const select = document.querySelector('#rating');
 
     
-// Функция для создания QR-кода
-    function generateQRCodeWithSelectedOptions(url, event) {
-        // Получаем выбранный элемент <select>
+// // Функция для создания QR-кода
+//     function generateQRCodeWithSelectedOptions(url, event) {
+//         // Получаем выбранный элемент <select>
 
-        document.querySelector('#rating').addEventListener('click', (event) => {
-          const colorString = event.target.value;
-          const [material] = modelViewerColor.model.materials;
-          material.pbrMetallicRoughness.setBaseColorFactor(colorString);
-          return colorString;
-        });
+        
 
-        // Получаем значение выбранного элемента <select>
-        const selectedOptionValue = select[2].value;
-        console.log(selectedOptionValue)
+//         // Получаем значение выбранного элемента <select>
+//         const selectedOptionValue = select[2].value;
+//         console.log(selectedOptionValue)
 
-        // Создаем новый URL с выбранным параметром
-        const urlWithSelectedOption = new URL(url);
-        urlWithSelectedOption.searchParams.set('option', selectedOptionValue);
+//         // Создаем новый URL с выбранным параметром
+//         // const urlWithSelectedOption = new URL(url);
+//         // urlWithSelectedOption.searchParams.set('option', selectedOptionValue);
 
-        // Создаем QR-код с помощью библиотеки qrcode-generator
+//         // Создаем QR-код с помощью библиотеки qrcode-generator
 
  
 
 
-        // Получаем изображение QR-кода в формате base64
-        const qrCodeImageBase64 = qrCode.createDataURL();
+//         // Получаем изображение QR-кода в формате base64
+//         const qrCodeImageBase64 = qrCode.createDataURL();
 
-        // Возвращаем изображение QR-кода
-        return qrCodeImageBase64;
-        }
+//         // Возвращаем изображение QR-кода
+//         return qrCodeImageBase64;
+//         }
 
-        // Пример использования функции
-        const url = window.location.href;
-        const selectElementId = 'options';
-        const qrCodeImage = generateQRCodeWithSelectedOptions(url, selectElementId);
+//         // Пример использования функции
+//         const url = window.location.href;
+//         const selectElementId = 'options';
+//         const qrCodeImage = generateQRCodeWithSelectedOptions(url, selectElementId);
 
-        // Вставляем изображение QR-кода на страницу
-        const qrCodeImageElement = document.createElement('img');
-        qrCodeImageElement.src = qrCodeImage;
-        document.body.appendChild(qrCodeImageElement);
-    </script>
+//         // Вставляем изображение QR-кода на страницу
+//         const qrCodeImageElement = document.createElement('img');
+//         qrCodeImageElement.src = qrCodeImage;
+//         document.body.appendChild(qrCodeImageElement);
+//     </script>
 
 
   
