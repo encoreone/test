@@ -5,14 +5,14 @@ const modalClose = document.querySelector('.modal__content--close');
 //qr interface
 const href = window.location.href;
 
-const qrcode = new QRCode(document.getElementById("qrcode"), {
-    text: `${href}`,
-    width: 270,
-    height: 270,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-});
+// const qrcode = new QRCode(document.getElementById("qrcode"), {
+//     text: `${}`,
+//     width: 270,
+//     height: 270,
+//     colorDark : "#000000",
+//     colorLight : "#ffffff",
+//     correctLevel : QRCode.CorrectLevel.H
+// });
 
 //qr activate block
 if (href.endsWith('#ar')) {

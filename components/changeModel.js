@@ -7,10 +7,12 @@ modelViewerTexture.addEventListener("load", () => {
   const materialFourth = modelViewerTexture.model.materials[3];
   const materialFifth = modelViewerTexture.model.materials[4];
 
+
   const createAndApplyTextureOne = async (channel, event) => {
     const texture = await modelViewerTexture.createTexture(event.target.value);
-    materialMain.pbrMetallicRoughness[channel].setMetallicFactor(texture);
-    // materialMain.pbrMetallicRoughness[channel].baseColorFactor(texture);
+    materialMain.pbrMetallicRoughness['baseColorTexture'].texture.setURI("https://thereisatexturefilehere.com");
+
+//    materialMain.pbrMetallicRoughness[channel].setTexture(texture);
   }
 
   const createAndApplyTextureTwo = async (channel, event) => {
