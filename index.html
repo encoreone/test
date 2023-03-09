@@ -87,8 +87,8 @@
   <model-viewer id="color" camera-controls touch-action="pan-y" interaction-prompt="none" src="get/demo.glb" ar alt="A 3D model of an astronaut">
     <select class="sort-by" id="rating">
       <option value="" disabled selected>0</option>
-      <option value="blue">1</option>
-      <option value="red">2</option>
+      <option value="blue">Синий</option>
+      <option value="red">Красный</option>
     </select>
     <button class="button__view-ar" id="ar">
       <span class="button__view-ar--span">
@@ -117,14 +117,43 @@ fetch('./get/demo.glb')
   .then(blob => {
     const reader = new FileReader();
     reader.onload = () => {
+      const select = document.getElementById('rating');
+
       const model = reader.result;
       modelViewerColor.src = URL.createObjectURL(blob);
+
+
+      select.addEventListener('change', () => {
+        const optionValue = select.value;
+        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+        const params = new URLSearchParams();
+
+        params.append('optionValue', optionValue);
+        const url = new URL(window.location.href);
+        url.search = params.toString();
+        // console.log(url)
+
+        // генерируем QR-код со ссылкой на страницу с измененной моделью
+        const qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: `${url}#ar`,
+            width: 270,
+            height: 270,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+      })
       modelViewerColor.addEventListener('load', (event) => {
-        event.preventDefault();
+        
+
+        // event.preventDefault();
         const urlParams = new URLSearchParams(window.location.search);
         const optionValue = urlParams.get('optionValue');
+
+        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+        console.log(optionToSelect + '((()))')
+
         if (optionValue) {
-          const select = document.getElementById('rating');
           const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
           if (optionToSelect) {
             optionToSelect.selected = true;
@@ -133,17 +162,6 @@ fetch('./get/demo.glb')
             material.pbrMetallicRoughness.setBaseColorFactor(optionValue); 
           }
         }
-
-        
-        // генерируем QR-код со ссылкой на страницу с измененной моделью
-        const qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: `${window.location.href}`,
-            width: 270,
-            height: 270,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
       });
     };
     reader.readAsArrayBuffer(blob);
@@ -194,6 +212,16 @@ fetch('./get/demo.glb')
     
 
 
+</script>
+
+<script>
+  if (href.endsWith('#ar')) {
+    window.addEventListener("load", () => {
+        var modelViewer = document.querySelector('.model-viewer');
+        console.log("Can activate AR: " + modelViewer.canActivateAR);
+        modelViewer.activateAR();
+    });
+}
 </script>
 
 
