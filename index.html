@@ -118,6 +118,22 @@ fetch('./get/demo.glb')
         const newUrl = url.toString();
         history.pushState(null, '', newUrl)
 
+        
+        const qrcodeContainer = document.getElementById("qrcode");
+
+while (qrcodeContainer.firstChild)
+  qrcodeContainer.removeChild(qrcodeContainer.firstChild)
+
+        // генерируем QR-код со ссылкой на страницу с измененной моделью
+const qrcode = new QRCode(document.getElementById("qrcode"), {
+  text: `${url}#ar`,
+  width: 270,
+  height: 270,
+  colorDark : "#000000",
+  colorLight : "#ffffff",
+  correctLevel : QRCode.CorrectLevel.H
+});
+
         // обновляем модель при изменении параметров
         const [material, kek] = modelViewerColor.model.materials;
         material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
@@ -151,15 +167,7 @@ fetch('./get/demo.glb')
     reader.readAsArrayBuffer(blob);
   });
 
-// генерируем QR-код со ссылкой на страницу с измененной моделью
-const qrcode = new QRCode(document.getElementById("qrcode"), {
-  text: `${url}#ar`,
-  width: 270,
-  height: 270,
-  colorDark : "#000000",
-  colorLight : "#ffffff",
-  correctLevel : QRCode.CorrectLevel.H
-});
+
   </script>
 
 <script>
