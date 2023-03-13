@@ -14,13 +14,13 @@
   <noscript><div><img src="https://mc.yandex.ru/watch/38179485" style="position:absolute; left:-9999px;" alt="" /></div></noscript> 
 </head> 
 <body>
-  <!-- <model-viewer id="pickMaterial" class="model-viewer" bounds="tight" src="get/demo.glb" ios-src="get/demo.usdz" shadow-intensity="1" 
+  <model-viewer id="color" class="model-viewer" bounds="tight" src="get/demo.glb" ios-src="get/demo.usdz" shadow-intensity="1" 
     ar enable-pan ar-scale="auto" camera-controls exposure="1" ar-modes="scene-viewer quick-look webxr" 
     quick-look-browsers="safari chrome" auto-rotate scale="1.2 1.2 1.2" min-camera-orbit="auto auto auto" 
     max-camera-orbit="auto auto auto" autoplay >
     <div class="progress-bar hide" slot="progress-bar"> 
       <div class="update-bar"></div> 
-    </div> 
+    </div>
     <button onclick="myFunction()" slot="ar-button" id="ar-button" class="ar-button"> Включить AR </button>
     <div id="ar-prompt"> <img src="get/hand.png" /></div>
   </model-viewer>
@@ -32,186 +32,124 @@
         <p class="button__view-ar--text">VIEW IN AR</p>
     </button>
     <div class="frame__select-colors">
-      <div class="main">
+      <div class="first">
         <select id="colors-main" class="box-select">
           <option value="" selected disabled hidden>Основной цвет:</option>
-          <option value="./assets/red.png">Красный</option>
-          <option value="./assets/green.png">Зеленый</option>
-          <option value="./assets/blue.png">Белый</option>
+          <option value="red">Красный</option>
+          <option value="green">Зеленый</option>
+          <option value="blue">Синий</option>
         </select>
       </div>
       <div class="second">
         <select id="colors-second" class="box-select">
           <option value="" selected disabled hidden>Вспомогательный цвет:</option>
-          <option value="./assets/red.png">Красный</option>
-          <option value="./assets/green.png">Зеленый</option>
-          <option value="./assets/blue.jpg">Синий</option>
+          <option value="red">Красный</option>
+          <option value="green">Зеленый</option>
+          <option value="blue">Синий</option>
         </select>
       </div>
-    </div> -->
-    <!-- <div class="third">
+    </div>
+    <div class="third">
       <select id="colors-third" class="box-select">
         <option value="" selected disabled hidden>Цвет бренда:</option>
-        <option value="./assets/red.png">Красный</option>
-        <option value="./assets/green.png">Зеленый</option>
-        <option value="">Белый</option>
+        <option value="red">Красный</option>
+        <option value="green">Зеленый</option>
+        <option value="blue">Синий</option>
       </select>
-    </div> -->
-    <!-- <div class="fourth">
+    </div>
+    <div class="fourth">
       <select id="colors-fourth" class="box-select">
         <option value="" selected disabled hidden>Цвет логотипа:</option>
-        <option value="./assets/red.png">Красный</option>
+        <option value="red">Красный</option>
+        <option value="green">Зеленый</option>
         <option value="blue">Синий</option>
-        <option value="white">Белый</option>
       </select>
     </div>
     <div class="fifth">
       <select id="colors-fifth" class="box-select">
         <option value="" selected disabled hidden>Цвет знака логотипа:</option>
-        <option value="./assets/red.png">Красный</option>
+        <option value="red">Красный</option>
+        <option value="green">Зеленый</option>
         <option value="blue">Синий</option>
-        <option value="white">Белый</option>
       </select>
-    </div> -->
-  <!-- </div>
+    </div>
+  </div>
   <div id="modal" class="modal">
     <div class="modal__content">
       <span class="modal__content--close">&times;</span>
       <p class="modal__content--text">Отсканируйте QR-код с помощью приложения камеры на мобильном устройстве.</p>
       <div class="modal__content--qr" id="qrcode"></div>
     </div>
-  </div> -->
+  </div> 
 
-
-
-  <model-viewer id="color" camera-controls touch-action="pan-y" interaction-prompt="none" src="get/demo.glb" ar alt="A 3D model of an astronaut">
-    <select class="sort-by" id="rating">
-      <option value="" disabled selected>0</option>
-      <option value="blue">Синий</option>
-      <option value="red">Красный</option>
-    </select>
-    <button class="button__view-ar" id="ar">
-      <span class="button__view-ar--span">
-          <img src="assets/iconAR.png" class="button__view-ar--icon" alt="icon_ar">
-      </span>
-      <p class="button__view-ar--text">VIEW IN AR</p>
-    </button>
-    <div id="modal" class="modal">
-      <div class="modal__content">
-        <span class="modal__content--close">&times;</span>
-        <p class="modal__content--text">Отсканируйте QR-код с помощью приложения камеры на мобильном устройстве.</p>
-        <div class="modal__content--qr" id="qrcode"></div>
-      </div>
-    </div>
-    <button onclick="exportGLB()">Export GLB</button>
-  </model-viewer>
-
+  
   <script src="components/qrcode.js"></script> 
 
   <script>
 
 const modelViewerColor = document.querySelector("model-viewer#color");
 
-fetch('./get/demo.glb')
-  .then(response => response.blob())
-  .then(blob => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const select = document.getElementById('rating');
+const select = document.getElementById('colors-main');
 
-      const model = reader.result;
-      modelViewerColor.src = URL.createObjectURL(blob);
+const selTest = document.querySelector('select')
+console.log(selTest[2])
 
+select.addEventListener('change', (e) => {
+        const optionValue = e.target.value;
 
-      select.addEventListener('change', () => {
-        const optionValue = select.value;
         const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
         const params = new URLSearchParams();
 
         params.append('optionValue', optionValue);
         const url = new URL(window.location.href);
         url.search = params.toString();
-        // console.log(url)
 
-        // генерируем QR-код со ссылкой на страницу с измененной моделью
-        const qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: `${url}#ar`,
-            width: 270,
-            height: 270,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-      })
+        const newUrl = url.toString();
+        history.pushState(null, '', newUrl)
+
+
+        fetch('./get/demo.glb')
+  .then(response => response.blob())
+  .then(blob => {
+    const reader = new FileReader();
+    reader.onload = () => {
+
+      const model = reader.result;
+      modelViewerColor.src = URL.createObjectURL(blob);
+     
+        // // генерируем QR-код со ссылкой на страницу с измененной моделью (qrcode)
+        // const qrcode = new QRCode(document.getElementById("qrcode"), {
+        //     text: `${url}#ar`,
+        //     width: 270,
+        //     height: 270,
+        //     colorDark : "#000000",
+        //     colorLight : "#ffffff",
+        //     correctLevel : QRCode.CorrectLevel.H
+        // });
+      
       modelViewerColor.addEventListener('load', (event) => {
         
-
-        // event.preventDefault();
         const urlParams = new URLSearchParams(window.location.search);
         const optionValue = urlParams.get('optionValue');
 
         const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
-        console.log(optionToSelect + '((()))')
 
         if (optionValue) {
           const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
           if (optionToSelect) {
             optionToSelect.selected = true;
 
-            const [material] = modelViewerColor.model.materials;
+            const [material, matarialTest] = modelViewerColor.model.materials;
             material.pbrMetallicRoughness.setBaseColorFactor(optionValue); 
+            matarialTest.pbrMetallicRoughness.setBaseColorFactor("red"); 
+
           }
         }
       });
     };
-    reader.readAsArrayBuffer(blob);
+    reader.readAsArrayBuffer(blob); //blob to file present normalno 
   });
-
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   const urlParams = new URLSearchParams(window.location.search);
-//   const optionValue = urlParams.get('optionValue');
-//   if (optionValue) {
-//     const select = document.getElementById('rating');
-//     const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
-//     if (optionToSelect) {
-//       optionToSelect.selected = true;
-
-//     }
-//   }
-
-//   const modelViewerColor = document.querySelector("model-viewer#color");
-//   const select = document.getElementById('rating');
-
-//   select.addEventListener('change', () => {
-//     const optionValue = select.value;
-
-//     const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
-//     optionToSelect.selected = true;
-
-//     const [material] = modelViewerColor.model.materials;
-//       material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
-
-//     const params = new URLSearchParams();
-//     params.append('optionValue', optionValue);
-//     const url = new URL(window.location.href);
-//     url.search = params.toString();
-//     window.history.pushState({}, '', url);
-    
-//     const qrcode = new QRCode(document.getElementById("qrcode"), {
-//       text: `${window.location.href}`,
-//       width: 270,
-//       height: 270,
-//       colorDark : "#000000",
-//       colorLight : "#ffffff",
-//       correctLevel : QRCode.CorrectLevel.H
-//     });
-//   });
-// });
-    
-
-
+});
 </script>
 
 <script>
@@ -224,104 +162,6 @@ fetch('./get/demo.glb')
 }
 </script>
 
-
-  
-<!-- <script>
-  
-    const select = document.getElementById('rating');
-
-      select.addEventListener('change', () => {
-        const optionValue = select.value;
-        const optionToSelect = Array.from(select.options).find(option => option.value == optionValue);
-        optionToSelect.selected = true;
-
-        const params = new URLSearchParams();
-        params.append('optionValue', optionValue);
-
-        const url = new URL(window.location.href);
-        url.search = params.toString();
-        let kok = window.history.replaceState({}, '', url)
-        
-        console.log(window.location.href)
-
-        const qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: `${kok}`,
-            width: 270,
-            height: 270,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-      })
-
-      document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const optionValue = urlParams.get('optionValue');
-        const optionToSelect = document.querySelector(`option[value="${optionValue}"]`);
-        optionToSelect.selected = true;
-
-        const params = new URLSearchParams();
-        params.append('optionValue', optionValue);
-        const url = new URL(window.location.href);
-        url.search = params.toString();
-        window.history.replaceState({}, '', url);
-      })
-
-</script> -->
-
-
-
-  <script>
-
-// async function exportGLB(){
-//     const modelViewer = document.getElementById("color");
-//     const glTF = await modelViewer.exportScene();
-//     const file = new File([glTF], "export.glb");
-//     console.log(file)
-
-    
-//   }
-
-
-//     // const select = document.querySelector('#rating');
-
-    
-// // Функция для создания QR-кода
-//     function generateQRCodeWithSelectedOptions(url, event) {
-//         // Получаем выбранный элемент <select>
-
-        
-
-//         // Получаем значение выбранного элемента <select>
-//         const selectedOptionValue = select[2].value;
-//         console.log(selectedOptionValue)
-
-//         // Создаем новый URL с выбранным параметром
-//         // const urlWithSelectedOption = new URL(url);
-//         // urlWithSelectedOption.searchParams.set('option', selectedOptionValue);
-
-//         // Создаем QR-код с помощью библиотеки qrcode-generator
-
- 
-
-
-//         // Получаем изображение QR-кода в формате base64
-//         const qrCodeImageBase64 = qrCode.createDataURL();
-
-//         // Возвращаем изображение QR-кода
-//         return qrCodeImageBase64;
-//         }
-
-//         // Пример использования функции
-//         const url = window.location.href;
-//         const selectElementId = 'options';
-//         const qrCodeImage = generateQRCodeWithSelectedOptions(url, selectElementId);
-
-//         // Вставляем изображение QR-кода на страницу
-//         const qrCodeImageElement = document.createElement('img');
-//         qrCodeImageElement.src = qrCodeImage;
-//         document.body.appendChild(qrCodeImageElement);
-//     </script>
 
 
   
