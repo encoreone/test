@@ -1,5 +1,4 @@
 const optionSec = document.getElementById('colors-second');
-const modelViewerColor = document.querySelector("model-viewer#color");
 
 async function changeColorSec(e) {
   const optionValue = e.target.value;
@@ -13,8 +12,9 @@ async function changeColorSec(e) {
   const newUrl = url.toString();
   history.pushState(null, '', newUrl)
 
-  const response = await fetch('./get/demo.glb');
-  const blob = await response.blob();    
+  fetch('./get/demo.glb')
+  .then(response => response.blob())
+  .then(blob => {  
   const reader = new FileReader();
       reader.onload = () => {
         const model = reader.result;
@@ -54,6 +54,7 @@ async function changeColorSec(e) {
       });
 
     reader.readAsArrayBuffer(blob);
+  })
 }
 
 optionSec.addEventListener('change', changeColorSec);

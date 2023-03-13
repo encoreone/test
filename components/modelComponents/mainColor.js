@@ -1,66 +1,51 @@
 const modelViewerColor = document.querySelector("model-viewer#color");
+
 const select = document.getElementById('colors-main');
 const optionSec = document.getElementById('colors-second');
 const optionTrd = document.getElementById('colors-third');
 const optionFou = document.getElementById('colors-fourth');
 const optionFive = document.getElementById('colors-fifth');
+//working on change model
 
-async function changeColor(e) {
-  const optionValue = select.value;
-  const optionValueSec = optionSec.value;
-  const optionValueTrd = optionTrd.value;
-  const optionValueFou = optionFou.value;
-  const optionValueFive = optionFive.value;
-
-  const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
-
+function changeColor(e) {
+  const optionValue = e.target.value;
+  // const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
   const params = new URLSearchParams();
-  params.append('firstValue', optionValue);
-  // params.append('secondValue', optionValueSec);
-  // params.append('thirdValue', optionValueTrd);
-  // params.append('fourthValue', optionValueFou);
-  // params.append('fifthValue', optionValueFive);
 
+  params.append('optionValue', optionValue);
   const url = new URL(window.location.href);
   url.search = params.toString();
+
   const newUrl = url.toString();
-  history.pushState(null, '', newUrl);
+  history.pushState(null, '', newUrl)
 
-  const response = await fetch('./get/demo.glb');
-  const blob = await response.blob();
+  fetch('./get/demo.glb')
+    .then(response => response.blob())
+    .then(blob => {
+      const reader = new FileReader();
 
-  const reader = new FileReader();
-  reader.onload = async () => {
-      modelViewerColor.src = URL.createObjectURL(blob);
-
+      reader.onload = () => {
+        const model = reader.result;
+        modelViewerColor.src = URL.createObjectURL(blob);
+  
+        modelViewerColor.addEventListener('load', () => {
+    
           const urlParams = new URLSearchParams(window.location.search);
-          const optionValue = urlParams.get('firstValue');
-          // const optionValue = urlParams.get('secondValue');
-          // const optionValue = urlParams.get('secValue');
-          // const optionValue = urlParams.get('secValue');
-
-          const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+          const optionValue = urlParams.get('optionValue');
+          const optionToSelect = Array.from(select.options).find(select => optionValue.value === optionValue);
 
           if (optionValue) {
-            const optionToSelect = optionValue.querySelector(`option[value="${optionValue}"]`);
-            
+            const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
+            console.log("lel")
             if (optionToSelect) {
               optionToSelect.selected = true;
 
-              const buffer = reader.result;
-          const [main, sec, thrd, foth, fiv] = modelViewerColor.model.materials;
-            main.pbrMetallicRoughness.setBaseColorFactor(optionValue); 
-            // sec.pbrMetallicRoughness.setBaseColorFactor(optionValueSec);
-            // thrd.pbrMetallicRoughness.setBaseColorFactor(optionValueTrd);
-            // foth.pbrMetallicRoughness.setBaseColorFactor(optionValueFou);
-            // fiv.pbrMetallicRoughness.setBaseColorFactor(optionValueFive);
-
-            modelViewerColor.model.materials = materials;
-            // modelViewerColor.src = URL.createObjectURL(blob);
+              const [material] = modelViewerColor.model.materials;
+              material.pbrMetallicRoughness.setBaseColorFactor(optionValue); 
             }
           }
-
-    
+        });
+      };
 
       const qrcodeContainer = document.getElementById("qrcode");
 
@@ -75,10 +60,9 @@ async function changeColor(e) {
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
       });
-      reader.readAsArrayBuffer(blob);
 
-  };
-
+    reader.readAsArrayBuffer(blob);
+  });
 }
 
 select.addEventListener('change', changeColor);

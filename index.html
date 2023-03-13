@@ -84,12 +84,85 @@
 
   
   <script src="components/qrcode.js"></script> 
+
   <!-- <script src="components/modelComponents/mainColor.js"></script> -->
-  <script src="components/modelComponents/secColor.js"></script>
 
+  <script>
+   const modelViewerColor = document.querySelector("model-viewer#color");
+const select = document.getElementById('colors-main');
+const select1 = document.getElementById('colors-second');
 
+let model; // добавляем переменную для хранения модели
 
-<!-- <script>
+fetch('./get/demo.glb')
+  .then(response => response.blob())
+  .then(blob => {
+    const reader = new FileReader();
+    reader.onload = () => {
+
+      model = reader.result; // сохраняем модель в переменной
+
+      modelViewerColor.src = URL.createObjectURL(blob);
+
+      select.addEventListener('change', () => {
+        const optionValue = select.value;
+        const secValue = select1.value;
+        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+        const params = new URLSearchParams();
+
+        params.append('optionValue', optionValue);
+        params.append('secValue', secValue);
+
+        const url = new URL(window.location.href);
+        url.search = params.toString();
+        const newUrl = url.toString();
+        history.pushState(null, '', newUrl)
+
+        // обновляем модель при изменении параметров
+        const [material, kek] = modelViewerColor.model.materials;
+        material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+        kek.pbrMetallicRoughness.setBaseColorFactor(secValue);
+      })
+
+      modelViewerColor.addEventListener('load', () => {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const optionValue = urlParams.get('optionValue');
+        const optionValue1 = urlParams.get('secValue');
+
+        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+
+        if (optionValue) {
+          const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
+          const optionToSelect1 = select.querySelector(`option[value="${optionValue1}"]`);
+
+          if (optionToSelect) {
+            optionToSelect.selected = true;
+
+            // обновляем модель на основе выбранных параметров
+            const [material, kek] = modelViewerColor.model.materials;
+            material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+            kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
+          }
+        }
+      })
+    };
+
+    reader.readAsArrayBuffer(blob);
+  });
+
+// генерируем QR-код со ссылкой на страницу с измененной моделью
+const qrcode = new QRCode(document.getElementById("qrcode"), {
+  text: `${url}#ar`,
+  width: 270,
+  height: 270,
+  colorDark : "#000000",
+  colorLight : "#ffffff",
+  correctLevel : QRCode.CorrectLevel.H
+});
+  </script>
+
+<script>
   if (href.endsWith('#ar')) {
     window.addEventListener("load", () => {
         var modelViewer = document.querySelector('.model-viewer');
@@ -97,7 +170,9 @@
         modelViewer.activateAR();
     });
 }
-</script> -->
+</script>
+
+
 
   
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" defer></script>
@@ -107,7 +182,7 @@
   <script src="https://unpkg.com/fullscreen-polyfill@1.0.2/dist/fullscreen.polyfill.js" defer></script>
   <script src="https://unpkg.com/@magicleap/prismatic/prismatic.min.js" defer></script>
   <script src="components/focus-visible.js" defer></script>
-  <!-- <script src="components/yandexMetrika.js" defer></script> -->
-  <script src="components/script.js"></script>
+  <script src="components/yandexMetrika.js" defer></script>
+  <script src="components/script.js"></script> -->
 </body>
 </html>
