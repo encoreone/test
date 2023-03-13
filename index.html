@@ -106,19 +106,20 @@ fetch('./get/demo.glb')
 
       select.addEventListener('change', () => {
         const optionValue = select.value;
-        const secValue = select1.value;
+        const optionValue1 = select1.value;
+
         const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
         const params = new URLSearchParams();
 
         params.append('optionValue', optionValue);
-        params.append('secValue', secValue);
+        params.append('secValue', optionValue1);
 
         const url = new URL(window.location.href);
         url.search = params.toString();
         const newUrl = url.toString();
         history.pushState(null, '', newUrl)
 
-        
+
         const qrcodeContainer = document.getElementById("qrcode");
 
 while (qrcodeContainer.firstChild)
@@ -135,9 +136,8 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
 });
 
         // обновляем модель при изменении параметров
-        const [material, kek] = modelViewerColor.model.materials;
+        const [material] = modelViewerColor.model.materials;
         material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
-        kek.pbrMetallicRoughness.setBaseColorFactor(secValue);
       })
 
       modelViewerColor.addEventListener('load', () => {
@@ -148,7 +148,7 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
 
         const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
 
-        if (optionValue) {
+        if (optionValue || optionValue1) {
           const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
           const optionToSelect1 = select.querySelector(`option[value="${optionValue1}"]`);
 
@@ -159,6 +159,7 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
             const [material, kek] = modelViewerColor.model.materials;
             material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
             kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
+
           }
         }
       })
