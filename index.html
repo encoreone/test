@@ -85,7 +85,6 @@
   
   <script src="components/qrcode.js"></script> 
 
-  <!-- <script src="components/modelComponents/mainColor.js"></script> -->
 
   <script>
    const modelViewerColor = document.querySelector("model-viewer#color");
@@ -93,6 +92,7 @@ const select = document.getElementById('colors-main');
 const select1 = document.getElementById('colors-second');
 
 let model; // добавляем переменную для хранения модели
+
 
 fetch('./get/demo.glb')
   .then(response => response.blob())
@@ -105,40 +105,56 @@ fetch('./get/demo.glb')
       modelViewerColor.src = URL.createObjectURL(blob);
 
       select.addEventListener('change', () => {
-        const optionValue = select.value;
-        const optionValue1 = select1.value;
+  const optionValue = select.value;
+  const params = new URLSearchParams();
 
-        const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
-        const params = new URLSearchParams();
+  params.append('optionValue', optionValue);
 
-        params.append('optionValue', optionValue);
-        params.append('secValue', optionValue1);
+  // создаем новый URL-объект на основе текущего URL-адреса страницы
+  const url = new URL(window.location.href);
+  url.search = params.toString();
+  const newUrl = url.toString();
+  history.pushState(null, '', newUrl)
 
-        const url = new URL(window.location.href);
-        url.search = params.toString();
-        const newUrl = url.toString();
-        history.pushState(null, '', newUrl)
+  // генерируем QR-код со ссылкой на страницу с измененной моделью
+  const qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: `${url}#ar`,
+    width: 270,
+    height: 270,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
 
-
-        const qrcodeContainer = document.getElementById("qrcode");
-
-while (qrcodeContainer.firstChild)
-  qrcodeContainer.removeChild(qrcodeContainer.firstChild)
-
-        // генерируем QR-код со ссылкой на страницу с измененной моделью
-const qrcode = new QRCode(document.getElementById("qrcode"), {
-  text: `${url}#ar`,
-  width: 270,
-  height: 270,
-  colorDark : "#000000",
-  colorLight : "#ffffff",
-  correctLevel : QRCode.CorrectLevel.H
+  const [material] = modelViewerColor.model.materials;
+  material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
 });
 
-        // обновляем модель при изменении параметров
-        const [material] = modelViewerColor.model.materials;
-        material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
-      })
+select1.addEventListener('change', () => {
+  const optionValue1 = select1.value;
+  const params = new URLSearchParams();
+
+  params.append('secValue', optionValue1);
+
+  // создаем новый URL-объект на основе текущего URL-адреса страницы
+  const url = new URL(window.location.href);
+  url.search = params.toString();
+  const newUrl = url.toString();
+  history.pushState(null, '', newUrl)
+
+  // генерируем QR-код со ссылкой на страницу с измененной моделью
+  const qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: `${url}#ar`,
+    width: 270,
+    height: 270,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
+
+  const [, kek] = modelViewerColor.model.materials;
+  kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
+});
 
       modelViewerColor.addEventListener('load', () => {
 
@@ -147,6 +163,7 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
         const optionValue1 = urlParams.get('secValue');
 
         const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+        const optionToSelect1 = Array.from(select1.options).find(option => option.value === optionValue1);
 
         if (optionValue || optionValue1) {
           const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
@@ -155,11 +172,16 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
           if (optionToSelect) {
             optionToSelect.selected = true;
 
-            // обновляем модель на основе выбранных параметров
             const [material, kek] = modelViewerColor.model.materials;
             material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
             kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
+          }
 
+          if (optionToSelect1) {
+            optionToSelect1.selected = true;
+
+            const [, kek] = modelViewerColor.model.materials;
+            kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
           }
         }
       })
@@ -170,6 +192,120 @@ const qrcode = new QRCode(document.getElementById("qrcode"), {
 
 
   </script>
+
+
+
+  <!-- <script>
+    const modelViewerColor = document.querySelector("model-viewer#color");
+    const select = document.getElementById('colors-main');
+    const select1 = document.getElementById('colors-second');
+
+    let model;
+
+    fetch('./get/demo.glb')
+      .then(response => response.blob())
+      .then(blob => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          model = reader.result;
+
+          modelViewerColor.src = URL.createObjectURL(blob);
+
+          select.addEventListener('change', () => {
+            const optionValue = select.value;
+            const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+            const params = new URLSearchParams();
+
+            params.append('firstValue', optionValue);
+
+            const url = new URL(window.location.href);
+            url.search = params.toString();
+            const newUrl = url.toString();
+            history.pushState(null, '', newUrl)
+
+            const qrcodeContainer = document.getElementById("qrcode");
+
+            while (qrcodeContainer.firstChild)
+              qrcodeContainer.removeChild(qrcodeContainer.firstChild)
+
+            const qrcode = new QRCode(document.getElementById("qrcode"), {
+              text: `${url}#ar`,
+              width: 270,
+              height: 270,
+              colorDark : "#000000",
+              colorLight : "#ffffff",
+              correctLevel : QRCode.CorrectLevel.H
+            });
+
+            const [material] = modelViewerColor.model.materials;
+            material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+          });
+
+          // select1.addEventListener('change', () => {
+          //   const optionValue1 = select1.value;
+
+          //   const optionToSelect = Array.from(select1.options).find(option => option.value === optionValue1);
+          //   const params = new URLSearchParams();
+
+          //   params.append('secValue', optionValue1);
+
+          //   const url = new URL(window.location.href);
+          //   url.search = params.toString();
+          //   // const newUrl = url.toString();
+          //   history.pushState(null, '', url)
+
+
+          //   const qrcodeContainer = document.getElementById("qrcode");
+
+          //   while (qrcodeContainer.firstChild)
+          //     qrcodeContainer.removeChild(qrcodeContainer.firstChild)
+
+          //   // генерируем QR-код со ссылкой на страницу с измененной моделью
+          //   const qrcode = new QRCode(document.getElementById("qrcode"), {
+          //     text: `${url}#ar`,
+          //     width: 270,
+          //     height: 270,
+          //     colorDark : "#000000",
+          //     colorLight : "#ffffff",
+          //     correctLevel : QRCode.CorrectLevel.H
+          //   });
+
+          //   // обновляем модель при изменении параметров
+          //   const [, kek] = modelViewerColor.model.materials;
+          //   kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1)
+          // })
+
+          modelViewerColor.addEventListener('load', () => {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const optionValue = urlParams.get('optionValue');
+            const optionValue1 = urlParams.get('secValue');
+
+            const optionToSelect = Array.from(select.options).find(option => option.value === optionValue);
+            const optionToSelect1 = Array.from(select1.options).find(option => option.value === optionValue1);
+
+            if (optionValue || optionValue1) {
+              const optionToSelect = select.querySelector(`option[value="${optionValue}"]`);
+              const optionToSelect1 = select.querySelector(`option[value="${optionValue1}"]`);
+
+              if (optionToSelect) {
+                optionToSelect.selected = true;
+
+                // обновляем модель на основе выбранных параметров
+                const [material, kek] = modelViewerColor.model.materials;
+                material.pbrMetallicRoughness.setBaseColorFactor(optionValue);
+                kek.pbrMetallicRoughness.setBaseColorFactor(optionValue1);
+
+              }
+            }
+          })
+        }
+
+        reader.readAsArrayBuffer(blob);
+      })
+
+
+  </script> -->
 
 <script>
   if (href.endsWith('#ar')) {
